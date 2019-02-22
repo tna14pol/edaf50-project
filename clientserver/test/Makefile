@@ -24,7 +24,7 @@ LDFLAGS   = -g -L..
 LDLIBS = -lclientserver
 
 # Targets
-PROGS = myserver myclient
+PROGS = myserver myclient test_mh_server test_mh_client
 
 all: $(PROGS)
 
@@ -32,6 +32,8 @@ all: $(PROGS)
 # The dependency on libclientserver.a is not defined.
 myserver: myserver.o
 myclient: myclient.o
+test_mh_server: test_mh_server.o
+test_mh_client: test_mh_client.o
 
 SRC = $(wildcard *.cc)
 
