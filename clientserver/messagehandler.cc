@@ -2,13 +2,19 @@
 #include <memory>
 #include <string>
 #include <iostream>
+#include <sstream>
 #include "messagehandler.h"
 #include "protocol.h"
 
 
+
 void wrongCodeError(std::string function, Protocol expected, Protocol received)
 {
-	std::cerr << "Error in MessageHandler: " << function << ": expected " << static_cast<int>(expected) << ", got " << static_cast<int>(received) << std::endl;
+	std::ostringstream oss("test");
+	oss << "Error in MessageHandler: " << function
+		<< ": expected " << static_cast<int>(expected)
+		<< ", got " << static_cast<int>(received) << std::endl;
+	throw std::runtime_error(oss.str());
 }
 
 MessageHandler::MessageHandler(std::shared_ptr<Connection> connection)
@@ -35,8 +41,15 @@ void MessageHandler::sendIntParameter(int param) const
 	sendInt(param);
 }
 
-void MessageHandler::sendStringParameter(const std::string&/* param*/) const
-{}
+void MessageHandler::sendStringParameter(const std::string& param) const
+{
+	sendCode(Protocol::PAR_STRING);
+	sendInt(param.size());
+	for(char c : param)
+	{
+		sendByte(c);
+	}
+}
 
 Protocol MessageHandler::recvCode() const
 {
@@ -56,7 +69,8 @@ int MessageHandler::recvInt() const
 int MessageHandler::recvIntParameter() const
 {
 	Protocol code = recvCode();
-	if (code != Protocol::PAR_NUM) {
+	if (code != Protocol::PAR_NUM)
+	{
 		wrongCodeError("recvIntParameter()", Protocol::PAR_NUM, code);
 
 	}
@@ -65,7 +79,25 @@ int MessageHandler::recvIntParameter() const
 
 std::string MessageHandler::recvStringParameter() const
 {
-	return "unimplemented";
+	Protocol code = recvCode();
+	if (code != Protocol::PAR_STRING)
+	{
+		wrongCodeError("recvStringParameter()", Protocol::PAR_STRING, code);
+
+	}
+	auto n = recvInt();
+	if (n < 0)
+	{
+		std::string msg = "Error in MessageHandler: recvStringParameter: number of caracters < 0";
+		throw std::runtime_error(msg);
+	}
+	std::ostringstream oss("test");
+	for(int i = 0; i < n; i++)
+	{
+		oss << recvByte();
+	}
+	return oss.str();
+	
 }
 
 void MessageHandler::sendByte(unsigned char code) const
