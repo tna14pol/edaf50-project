@@ -54,6 +54,7 @@ int main(int argc, char* argv[])
 				sum += mh.recvIntParameter();
 				sum += mh.recvIntParameter();
 				sum += mh.recvIntParameter();
+				cout << "sum = " << sum << endl;
 				mh.sendIntParameter(sum);
 				string s = mh.recvStringParameter();
 				std::reverse( s.begin(), s.end());
