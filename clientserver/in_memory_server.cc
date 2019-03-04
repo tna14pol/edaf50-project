@@ -211,17 +211,43 @@ void delete_article(MessageHandler* mh)
 	mh->sendCode(Protocol::ANS_END);
 }
 
-/*
- * Waits for the COM_END code
- */
 void get_article(MessageHandler* mh)
 {
-	while (mh->recvCode() != Protocol::COM_END)
+	unsigned int ng_id = mh->recvIntParameter();
+	unsigned int a_id = mh->recvIntParameter();
+	
+	if (mh->recvCode() != Protocol::COM_END)
 	{
-	std::cout << "Waiting for COM_END" << std::endl;
+		protocolViolation("expected COM_END");
 	}
+	
 	mh->sendCode(Protocol::ANS_GET_ART);
-	mh->sendCode(Protocol::ANS_NAK);
+	try {
+		auto t = db.get_article(ng_id, a_id);
+		mh->sendCode(Protocol::ANS_ACK);
+		mh->sendStringParameter(std::get<0>(t));
+		mh->sendStringParameter(std::get<1>(t));
+		mh->sendStringParameter(std::get<2>(t));
+		
+	}
+	catch (const std::out_of_range& oor)
+	{
+		mh->sendCode(Protocol::ANS_NAK);
+		std::string news_group = "news group";
+		std::string article = "article";
+		if (news_group.compare(oor.what()))
+		{
+			mh->sendCode(Protocol::ERR_NG_DOES_NOT_EXIST);
+		}
+		else if (article.compare(oor.what()))
+		{
+			mh->sendCode(Protocol::ERR_ART_DOES_NOT_EXIST);
+		}
+		else
+		{
+			throw oor;
+		}
+	}
 	mh->sendCode(Protocol::ANS_END);
 }
 
