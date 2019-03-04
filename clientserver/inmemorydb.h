@@ -15,14 +15,13 @@ using id_t = unsigned int; // Alias to use for identification numbers
 
 class InMemoryDB :public DatabaseInterface {
 public:
-//	InMemoryDB();
-	std::vector<std::pair<id_t,string>> list_news_groups();
-	bool create_news_group(string);
-	bool delete_news_group(id_t);
-	std::vector<std::pair<id_t, string>> list_articles(id_t);
-	bool create_article(id_t, string, string, string);
-	StatusCode delete_article(id_t, id_t);
-	std::tuple<StatusCode, string, string, string> get_article(id_t, id_t);
+	std::vector<std::pair<id_t,string>> list_news_groups() override;
+	bool create_news_group(string) override;
+	bool delete_news_group(id_t) override;
+	std::vector<std::pair<const id_t, string>> list_articles(id_t) override;
+	bool create_article(id_t, string, string, string) override;
+	StatusCode delete_article(id_t, id_t) override;
+	std::tuple<StatusCode, string, string, string> get_article(id_t, id_t) override;
 private:
 	NewsGroup* findNewsGroup(id_t);
 	std::vector<NewsGroup> newsGroups;

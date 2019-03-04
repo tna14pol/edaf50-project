@@ -47,21 +47,26 @@ bool InMemoryDB::delete_news_group(id_t)
 	return false;
 }
 
-std::vector<std::pair<id_t, string>> InMemoryDB::list_articles(id_t id_nbr)
+std::vector<std::pair<const id_t, string>> InMemoryDB::list_articles(id_t id_nbr)
 {
 	NewsGroup* ng = findNewsGroup(id_nbr);
-	std::vector<std::pair<id_t, string>> list;
+	std::vector<std::pair<const id_t, string>> list;
 	if (ng == nullptr)
 	{
 		return list;
 	}
-	for (Article a : ng->articles)
+	for (auto kv : ng->articles)
 	{
-		list.emplace_back(a.id_nbr, a.title);
+		list.emplace_back(kv.first, kv.second.title);
 	}
 	return list;
 }
+/*
+Changed InMemoryDB to match change of implementation in NewsGroup
+regarding how articles are saved.
 
+
+*/
 bool InMemoryDB::create_article(id_t, string, string, string)
 {
 	return false;
