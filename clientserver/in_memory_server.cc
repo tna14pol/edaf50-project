@@ -117,12 +117,12 @@ int main(int argc, char* argv[])
 				switch (p) {
 					case Protocol::COM_LIST_NG:    list_news_groups(&mh); break;
 					case Protocol::COM_CREATE_NG:  create_news_group(&mh); break;
-					case Protocol::COM_DELETE_NG:  std::cout << "COM_DELETE_NG\n"; break; // delete newsgroup
-					case Protocol::COM_LIST_ART:   std::cout << "COM_LIST_ART\n"; break; // list articles
-					case Protocol::COM_CREATE_ART: std::cout << "COM_CREATE_ART\n"; break; // create article
-					case Protocol::COM_DELETE_ART: std::cout << "COM_DELETE_ART\n"; break; // delete article
-					case Protocol::COM_GET_ART:    std::cout << "COM_GET_ART\n"; break; // get article
-					default: std::cout << "other:" << std::endl;
+					case Protocol::COM_DELETE_NG:  ; break; // delete newsgroup
+					case Protocol::COM_LIST_ART:   ; break; // list articles
+					case Protocol::COM_CREATE_ART: ; break; // create article
+					case Protocol::COM_DELETE_ART: ; break; // delete article
+					case Protocol::COM_GET_ART:    ; break; // get article
+					default: break;
 				}
 				
 				
