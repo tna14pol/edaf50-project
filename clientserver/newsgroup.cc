@@ -11,13 +11,3 @@ bool NewsGroup::addArticle(string, string, string)
 {
 	return false;
 }
-
-const Article* NewsGroup::getArticle(id_t id) const
-{
-	return &(articles.at(id));
-}
-
-bool NewsGroup::removeArticle(id_t)
-{
-	return false;
-}

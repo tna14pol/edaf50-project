@@ -14,9 +14,6 @@ public:
 	NewsGroup(string, id_t);
 	// Creates an article and adds it to this newsgroup
 	bool addArticle(string, string, string);
-	const Article* getArticle(id_t) const;
-	// Removes an article from this newsgroup
-	bool removeArticle(id_t);
 	const id_t id_nbr;
 	const string name;
 	std::unordered_map<id_t, const Article> articles;
