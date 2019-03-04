@@ -76,7 +76,6 @@ void create_news_group(MessageHandler* mh)
 {
 	
 	std::string name = mh->recvStringParameter();
-	std::cout << "creating news group: " << name << "\n";
 	
 	if (mh->recvCode() != Protocol::COM_END)
 	{
@@ -143,7 +142,7 @@ void list_articles(MessageHandler* mh)
 			mh->sendStringParameter(a.second);
 		}
 	}
-	catch (const std::out_of_range& oor)
+	catch (const std::out_of_range&)
 	{
 		mh->sendCode(Protocol::ANS_NAK);
 		mh->sendCode(Protocol::ERR_NG_ALREADY_EXISTS);
@@ -151,31 +150,64 @@ void list_articles(MessageHandler* mh)
 	mh->sendCode(Protocol::ANS_END);
 }
 
-/*
- * Waits for the COM_END code
- */
 void create_article(MessageHandler* mh)
 {
-	while (mh->recvCode() != Protocol::COM_END)
+	unsigned int id_nbr = mh->recvIntParameter();
+	std::string title = mh->recvStringParameter();
+	std::string author = mh->recvStringParameter();
+	std::string text = mh->recvStringParameter();
+	
+	if (mh->recvCode() != Protocol::COM_END)
 	{
-	std::cout << "Waiting for COM_END" << std::endl;
+		protocolViolation("expected COM_END");
 	}
+	
 	mh->sendCode(Protocol::ANS_CREATE_ART);
-	mh->sendCode(Protocol::ANS_NAK);
+	try {
+		db.create_article(id_nbr, title, author, text);
+		mh->sendCode(Protocol::ANS_ACK);
+	}
+	catch (const std::out_of_range&)
+	{
+		mh->sendCode(Protocol::ANS_NAK);
+		mh->sendCode(Protocol::ERR_NG_DOES_NOT_EXIST);
+	}
 	mh->sendCode(Protocol::ANS_END);
 }
 
-/*
- * Waits for the COM_END code
- */
 void delete_article(MessageHandler* mh)
 {
-	while (mh->recvCode() != Protocol::COM_END)
+	unsigned int ng_id = mh->recvIntParameter();
+	unsigned int a_id = mh->recvIntParameter();
+	
+	if (mh->recvCode() != Protocol::COM_END)
 	{
-	std::cout << "Waiting for COM_END" << std::endl;
+		protocolViolation("expected COM_END");
 	}
+	
 	mh->sendCode(Protocol::ANS_DELETE_ART);
-	mh->sendCode(Protocol::ANS_NAK);
+	try {
+		db.delete_article(ng_id, a_id);
+		mh->sendCode(Protocol::ANS_ACK);
+	}
+	catch (const std::out_of_range& oor)
+	{
+		mh->sendCode(Protocol::ANS_NAK);
+		std::string news_group = "news group";
+		std::string article = "article";
+		if (news_group.compare(oor.what()))
+		{
+			mh->sendCode(Protocol::ERR_NG_DOES_NOT_EXIST);
+		}
+		else if (article.compare(oor.what()))
+		{
+			mh->sendCode(Protocol::ERR_ART_DOES_NOT_EXIST);
+		}
+		else
+		{
+			throw oor;
+		}
+	}
 	mh->sendCode(Protocol::ANS_END);
 }
 
