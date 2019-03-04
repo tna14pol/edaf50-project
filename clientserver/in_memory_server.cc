@@ -12,26 +12,24 @@
 #include <string>
 #include <algorithm>
 
-using namespace std;
-
 Server init(int argc, char* argv[])
 {
 	if (argc != 2) {
-		cerr << "Usage: in_memory_server port-number" << endl;
+		std::cerr << "Usage: in_memory_server port-number" << std::endl;
 		exit(1);
 	}
 
 	int port = -1;
 	try {
-		port = stoi(argv[1]);
-	} catch (exception& e) {
-		cerr << "Wrong format for port number. " << e.what() << endl;
+		port = std::stoi(argv[1]);
+	} catch (std::exception& e) {
+		std::cerr << "Wrong format for port number. " << e.what() << std::endl;
 		exit(2);
 	}
 
 	Server server(port);
 	if (!server.isReady()) {
-		cerr << "Server initialization error." << endl;
+		std::cerr << "Server initialization error." << std::endl;
 		exit(3);
 	}
 	return server;
@@ -63,12 +61,12 @@ int main(int argc, char* argv[])
 				mh.sendCode(Protocol::ANS_ACK);
 			} catch (ConnectionClosedException&) {
 				server.deregisterConnection(conn);
-				cout << "Client closed connection" << endl;
+				std::cout << "Client closed connection" << std::endl;
 			}
 		} else {
-			conn = make_shared<Connection>();
+			conn = std::make_shared<Connection>();
 			server.registerConnection(conn);
-			cout << "New client connects" << endl;
+			std::cout << "New client connects" << std::endl;
 		}
 	}
 	return 0;

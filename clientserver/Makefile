@@ -43,12 +43,12 @@ SRC = $(wildcard *.cc)
 # Standard clean
 clean:
 	rm $(SRC:.cc=.o) $(PROGS)
+	make -C test clean
 
 distclean: clean
 	-rm libclientserver.a
 	-rm $(SRC:.cc=.d) 
 	make -C test distclean
-
 
 # Include the *.d files
 -include $(SRC:.cc=.d)
