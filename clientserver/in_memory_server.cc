@@ -74,9 +74,9 @@ void list_news_groups(MessageHandler* mh)
 
 void create_news_group(MessageHandler* mh)
 {
-	std::cout << "creating news group\n";
 	
 	std::string name = mh->recvStringParameter();
+	std::cout << "creating news group: " << name << "\n";
 	
 	if (mh->recvCode() != Protocol::COM_END)
 	{
@@ -97,31 +97,57 @@ void create_news_group(MessageHandler* mh)
 	mh->sendCode(Protocol::ANS_END);
 }
 
-/*
- * Waits for the COM_END code
- */
 void delete_news_group(MessageHandler* mh)
 {
-	while (mh->recvCode() != Protocol::COM_END)
+	unsigned int id_nbr = mh->recvIntParameter();
+
+	if (mh->recvCode() != Protocol::COM_END)
 	{
-	std::cout << "Waiting for COM_END" << std::endl;
+		protocolViolation("expected COM_END");
 	}
+	
 	mh->sendCode(Protocol::ANS_DELETE_NG);
-	mh->sendCode(Protocol::ANS_NAK);
+	
+	if (db.delete_news_group(id_nbr))
+	{
+		mh->sendCode(Protocol::ANS_ACK);
+	}
+	else
+	{
+		mh->sendCode(Protocol::ANS_NAK);
+		mh->sendCode(Protocol::ERR_NG_DOES_NOT_EXIST);
+	}
 	mh->sendCode(Protocol::ANS_END);
 }
 
-/*
- * Waits for the COM_END code
- */
 void list_articles(MessageHandler* mh)
 {
-	while (mh->recvCode() != Protocol::COM_END)
+	unsigned int id_nbr = mh->recvIntParameter();
+
+	if (mh->recvCode() != Protocol::COM_END)
 	{
-	std::cout << "Waiting for COM_END" << std::endl;
+		protocolViolation("expected COM_END");
 	}
+	
 	mh->sendCode(Protocol::ANS_LIST_ART);
-	mh->sendCode(Protocol::ANS_NAK);
+	
+	try
+	{
+		auto list = db.list_articles(id_nbr);
+	
+		mh->sendCode(Protocol::ANS_ACK);
+		mh->sendIntParameter(list.size());
+	
+		for(auto a : list) {
+			mh->sendIntParameter(a.first);
+			mh->sendStringParameter(a.second);
+		}
+	}
+	catch (const std::out_of_range& oor)
+	{
+		mh->sendCode(Protocol::ANS_NAK);
+		mh->sendCode(Protocol::ERR_NG_ALREADY_EXISTS);
+	}
 	mh->sendCode(Protocol::ANS_END);
 }
 
