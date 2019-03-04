@@ -12,8 +12,10 @@ class NewsGroup {
 public:
 	NewsGroup()=delete;
 	NewsGroup(string, id_t);
-	// Creates an article and adds it to this newsgroup
-	bool addArticle(string, string, string);
+	/* 
+	 * Creates an article and adds it to this newsgroup
+	 */
+	void addArticle(string, string, string);
 	const id_t id_nbr;
 	const string name;
 	std::unordered_map<id_t, const Article> articles;

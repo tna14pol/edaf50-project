@@ -7,7 +7,8 @@ NewsGroup::NewsGroup(string name, id_t id_nbr)
 	articles = std::unordered_map<id_t, const Article>();
 }
 
-bool NewsGroup::addArticle(string, string, string)
+void NewsGroup::addArticle(string title, string author, string text)
 {
-	return false;
+	next_article_nbr++;
+	articles.emplace(next_article_nbr, Article(title, author, text, next_article_nbr));
 }
