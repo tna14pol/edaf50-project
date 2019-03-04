@@ -51,23 +51,49 @@ Server init(int argc, char* argv[])
 
 void list_news_groups(MessageHandler* mh)
 {
-	std::cout << "listing news groups\n";
 	Protocol next = mh->recvCode();
+	
 	if (next != Protocol::COM_END)
 	{
-		mh->sendCode(Protocol::ANS_NAK);
 		protocolViolation("COM_LIST_NG not followed by COM_END");
 	}
+	
 	mh->sendCode(Protocol::ANS_LIST_NG);
+	
 	auto list = db.list_news_groups();
-	std::cout << "sending list of " << list.size() << " news groups\n";
+	
 	mh->sendIntParameter(list.size());
+	
 	for(auto ng : list) {
-		std::cout << "sending int param: " << ng.first << "\n";
 		mh->sendIntParameter(ng.first);
-		std::cout << "sending string param: " << ng.second << "\n";
 		mh->sendStringParameter(ng.second);
 	}
+	
+	mh->sendCode(Protocol::ANS_END);
+}
+
+void create_news_group(MessageHandler* mh)
+{
+	std::cout << "creating news group\n";
+	
+	std::string name = mh->recvStringParameter();
+	
+	if (mh->recvCode() != Protocol::COM_END)
+	{
+		protocolViolation("expected COM_END");
+	}
+	
+	mh->sendCode(Protocol::ANS_CREATE_NG);
+	
+	if (db.create_news_group(name))
+	{
+		mh->sendCode(Protocol::ANS_ACK);
+	}
+	else
+	{
+		mh->sendCode(Protocol::ANS_NAK);
+		mh->sendCode(Protocol::ERR_NG_ALREADY_EXISTS);
+	}	
 	mh->sendCode(Protocol::ANS_END);
 }
 
@@ -77,7 +103,7 @@ int main(int argc, char* argv[])
 {
 	auto server = init(argc, argv);
 
-	std::cout << "created newsgroup: " << db.create_news_group("test group") << std::endl;
+	//std::cout << "created newsgroup: " << db.create_news_group("test group") << std::endl;
 
 	while (true) {
 		auto conn = server.waitForActivity();
@@ -89,8 +115,8 @@ int main(int argc, char* argv[])
 				Protocol p = mh.recvCode();
 				
 				switch (p) {
-					case Protocol::COM_LIST_NG: list_news_groups(&mh);break; // list newsgroups
-					case Protocol::COM_CREATE_NG:  std::cout << "COM_CREATE_NG\n"; break; // create newsgroup
+					case Protocol::COM_LIST_NG:    list_news_groups(&mh); break;
+					case Protocol::COM_CREATE_NG:  create_news_group(&mh); break;
 					case Protocol::COM_DELETE_NG:  std::cout << "COM_DELETE_NG\n"; break; // delete newsgroup
 					case Protocol::COM_LIST_ART:   std::cout << "COM_LIST_ART\n"; break; // list articles
 					case Protocol::COM_CREATE_ART: std::cout << "COM_CREATE_ART\n"; break; // create article
