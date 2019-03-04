@@ -23,8 +23,11 @@ public:
 	 * 
 	 * Returns a vector containing pairs of the
 	 * identification numbers and titles of the groups
+	 * 
+	 * The vector is sorted using the id numbers
+	 * 
 	 */
-	virtual std::vector<std::pair<const id_t, string>> list_news_groups() = 0;
+	virtual std::vector<std::pair<id_t, string>> list_news_groups() = 0;
 	
 	/*
 	 * Create a newsgroup
@@ -48,10 +51,12 @@ public:
 	 * Returns a vector containing pairs of the
 	 * identification numbers and titles of the articles
 	 * 
+	 * The vector is sorted using the id numbers
+	 * 
 	 * If the specified news group does not exist,
 	 * throws an out_of_range exception
 	 */
-	virtual std::vector<std::pair<const id_t, string>> list_articles(id_t) = 0;
+	virtual std::vector<std::pair<id_t, string>> list_articles(id_t) = 0;
 	 
 	/*
 	 * Create an article

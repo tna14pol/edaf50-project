@@ -1,4 +1,4 @@
-#include <algorithm> // std::find
+#include <algorithm> // std::sort
 #include <iostream>
 
 #include "inmemorydb.h"
@@ -7,13 +7,15 @@ using std::string;
 using id_t = unsigned int; // Alias to use for identification numbers
 
 
-std::vector<std::pair<const id_t,string>> InMemoryDB::list_news_groups()
+std::vector<std::pair<id_t,string>> InMemoryDB::list_news_groups()
 {
-	std::vector<std::pair<const id_t, string>> list;
+	std::vector<std::pair<id_t, string>> list;
 	for (auto kv : newsGroups)
 	{
 		list.emplace_back(kv.first, kv.second.name);
 	}
+	
+	std::sort(list.begin(), list.end());
 	return list;
 }
 
@@ -39,14 +41,16 @@ bool InMemoryDB::delete_news_group(id_t id_nbr)
 	return newsGroups.erase(id_nbr) == 1;
 }
 
-std::vector<std::pair<const id_t, string>> InMemoryDB::list_articles(id_t id_nbr)
+std::vector<std::pair<id_t, string>> InMemoryDB::list_articles(id_t id_nbr)
 {
 	NewsGroup ng = newsGroups.at(id_nbr);
-	std::vector<std::pair<const id_t, string>> list;
+	std::vector<std::pair<id_t, string>> list;
 	for (auto kv : ng.articles)
 	{
 		list.emplace_back(kv.first, kv.second.title);
 	}
+	
+	std::sort(list.begin(), list.end());
 	return list;
 }
 
