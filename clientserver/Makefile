@@ -29,8 +29,8 @@ all: libclientserver.a $(PROGS)
 # Create the library; ranlib is for Darwin (OS X) and maybe other systems.
 # Doesn't seem to do any damage on other systems.
 
-libclientserver.a: connection.o server.o messagehandler.o
-	ar rv libclientserver.a  connection.o server.o messagehandler.o
+libclientserver.a: connection.o server.o messagehandler.o inmemorydb.o newsgroup.o article.o
+	ar rv libclientserver.a  connection.o server.o messagehandler.o inmemorydb.o newsgroup.o article.o
 	ranlib libclientserver.a
 
 in_memory_server: in_memory_server.o libclientserver.a
