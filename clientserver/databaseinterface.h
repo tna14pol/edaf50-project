@@ -8,10 +8,17 @@
 
 #include <string>
 #include <vector>
+#include <tuple>
 #include <utility> // std::pair
 
 using std::string;
 using id_t = unsigned int; // Alias to use for identification numbers
+
+enum class StatusCode {
+	OK                 = 0,	// News group and article exists
+	NO_SUCH_NEWS_GROUP = 1,	// News group does not exist
+	NO_SUCH_ARTICLE    = 2	// News group exists but does not have the article
+};
 
 class DatabaseInterface {
 public:
@@ -23,7 +30,7 @@ public:
 	 * Returns a vector containing pairs of the
 	 * identification numbers and titles of the groups
 	 */
-	virtual std::vector<std::pair<id_t,string>> list_news_groups() = 0;
+	virtual std::vector<std::pair<id_t, string>> list_news_groups() = 0;
 	
 	/*
 	 * Create a newsgroup
@@ -36,58 +43,49 @@ public:
 	/*
 	 * Delete a newsgroup
 	 * 
-	 * The returned string contains either
-	 *    "ANS_ACK"
-	 * or
-	 * 	"ANS_NAK ERR_NG_DOES_NOT_EXIST"
+	 * Returns false if a news group by that name
+	 * did not exist; otherwise true
 	 */
-	virtual void delete_news_group(id_t) = 0;
+	virtual bool delete_news_group(id_t) = 0;
 	 
 	/*
 	 * List articles in a newsgroup
 	 * 
-	 * The returned string contains
-	 * 	the number of articles followed by the identification
-	 * 	numbers and titles of the articles
-	 * or
-	 * 	"ANS_NAK ERR_NG_DOES_NOT_EXIST"
+	 * Returns a vector containing pairs of the
+	 * identification numbers and titles of the articles
 	 * 
+	 * If the specified news group does not exist,
+	 * returns NULL
 	 */
-	virtual void list_articles(id_t) = 0;
+	virtual std::vector<std::pair<const id_t, string>> list_articles(id_t) = 0;
 	 
 	/*
 	 * Create an article
 	 * 
-	 * The returned string contains either
-	 *    "ANS_ACK"
-	 * or
-	 * 	"ANS_NAK ERR_NG_DOES_NOT_EXIST"
+	 * Returns false if news group does not exist; otherwise true
 	 */
-	virtual void create_article(id_t, string, string, string) = 0;
+	virtual bool create_article(id_t, string, string, string) = 0;
 	 
 	/*
 	 * Delete an article
 	 * 
-	 * The returned string contains either
-	 *    "ANS_ACK"
-	 * or
-	 * 	"ANS_NAK ERR_NG_DOES_NOT_EXIST"
-	 * or
-	 * 	"ANS_NAK ERR_ART_DOES_NOT_EXIST"
+	 * Returns NO_SUCH_NEWS_GROUP if the news group does
+	 * not exist; NO_SUCH_ARTICLE if the news group exists
+	 * but does not contain the article; otherwise OK
 	 */
-	virtual void delete_article(id_t, id_t) = 0;
+	virtual StatusCode delete_article(id_t, id_t) = 0;
 	 
 	/*
 	 * Get an article
 	 * 
-	 * The returned string contains either
-	 *    "ANS_ACK" followed by the title, author and text of the article
-	 * or
-	 * 	"ANS_NAK ERR_NG_DOES_NOT_EXIST"
-	 * or
-	 * 	"ANS_NAK ERR_ART_DOES_NOT_EXIST"
+	 * Returns a tuple containing a status code and the title,
+	 * author, and text of the article.
+	 * 
+	 * If the news group does not exist, the status code is NO_SUCH_NEWS_GROUP.
+	 * If the news group exists but not the article, the status code is NO_SUCH_ARTICLE.
+	 * Otherwise the status code is OK;
 	 */
-	virtual void get_article(id_t, id_t) = 0;
+	virtual std::tuple<StatusCode, string, string, string> get_article(id_t, id_t) = 0;
 
 };
 
