@@ -24,7 +24,6 @@ public:
 	void delete_article(id_t, id_t) override;
 	std::tuple<string, string, string> get_article(id_t, id_t) override;
 private:
-	NewsGroup* findNewsGroup(id_t);
 	std::unordered_map<id_t, NewsGroup> newsGroups;
 	id_t next_id;
 };

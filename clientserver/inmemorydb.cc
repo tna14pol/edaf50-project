@@ -7,11 +7,6 @@ using std::string;
 using id_t = unsigned int; // Alias to use for identification numbers
 
 
-NewsGroup* InMemoryDB::findNewsGroup(id_t id)
-{
-	return &(newsGroups.at(id));
-}
-
 std::vector<std::pair<const id_t,string>> InMemoryDB::list_news_groups()
 {
 	std::vector<std::pair<const id_t, string>> list;
@@ -39,9 +34,9 @@ bool InMemoryDB::create_news_group(string name)
 	return true;
 }
 
-bool InMemoryDB::delete_news_group(id_t)
+bool InMemoryDB::delete_news_group(id_t id_nbr)
 {
-	return false;
+	return newsGroups.erase(id_nbr) == 1;
 }
 
 std::vector<std::pair<const id_t, string>> InMemoryDB::list_articles(id_t id_nbr)
@@ -64,8 +59,20 @@ void InMemoryDB::create_article(id_t, string, string, string)
 {
 }
 
-void InMemoryDB::delete_article(id_t, id_t)
+void InMemoryDB::delete_article(id_t ng_id, id_t art_id)
 {
+	try
+	{
+		if (newsGroups.at(ng_id).articles.erase(art_id) == 0)
+		{
+			throw std::out_of_range("article");
+		}
+	}
+	catch (const std::out_of_range& oor)
+	{
+		std::cerr << "No such news group: " << oor.what() << "\n";
+		throw std::out_of_range("news group");
+	}
 }
 
 std::tuple<string, string, string> InMemoryDB::get_article(id_t ng_id, id_t art_id)
