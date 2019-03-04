@@ -10,10 +10,10 @@ class Article {
 public:
 	Article()=delete;
 	Article(string, string, string, id_t);
-	string title;
-	string author;
-	string text;
-	id_t id_nbr;
+	const string title;
+	const string author;
+	const string text;
+	const id_t id_nbr;
 };
 
 #endif
