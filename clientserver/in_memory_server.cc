@@ -93,7 +93,77 @@ void create_news_group(MessageHandler* mh)
 	{
 		mh->sendCode(Protocol::ANS_NAK);
 		mh->sendCode(Protocol::ERR_NG_ALREADY_EXISTS);
-	}	
+	}
+	mh->sendCode(Protocol::ANS_END);
+}
+
+/*
+ * Waits for the COM_END code
+ */
+void delete_news_group(MessageHandler* mh)
+{
+	while (mh->recvCode() != Protocol::COM_END)
+	{
+	std::cout << "Waiting for COM_END" << std::endl;
+	}
+	mh->sendCode(Protocol::ANS_DELETE_NG);
+	mh->sendCode(Protocol::ANS_NAK);
+	mh->sendCode(Protocol::ANS_END);
+}
+
+/*
+ * Waits for the COM_END code
+ */
+void list_articles(MessageHandler* mh)
+{
+	while (mh->recvCode() != Protocol::COM_END)
+	{
+	std::cout << "Waiting for COM_END" << std::endl;
+	}
+	mh->sendCode(Protocol::ANS_LIST_ART);
+	mh->sendCode(Protocol::ANS_NAK);
+	mh->sendCode(Protocol::ANS_END);
+}
+
+/*
+ * Waits for the COM_END code
+ */
+void create_article(MessageHandler* mh)
+{
+	while (mh->recvCode() != Protocol::COM_END)
+	{
+	std::cout << "Waiting for COM_END" << std::endl;
+	}
+	mh->sendCode(Protocol::ANS_CREATE_ART);
+	mh->sendCode(Protocol::ANS_NAK);
+	mh->sendCode(Protocol::ANS_END);
+}
+
+/*
+ * Waits for the COM_END code
+ */
+void delete_article(MessageHandler* mh)
+{
+	while (mh->recvCode() != Protocol::COM_END)
+	{
+	std::cout << "Waiting for COM_END" << std::endl;
+	}
+	mh->sendCode(Protocol::ANS_DELETE_ART);
+	mh->sendCode(Protocol::ANS_NAK);
+	mh->sendCode(Protocol::ANS_END);
+}
+
+/*
+ * Waits for the COM_END code
+ */
+void get_article(MessageHandler* mh)
+{
+	while (mh->recvCode() != Protocol::COM_END)
+	{
+	std::cout << "Waiting for COM_END" << std::endl;
+	}
+	mh->sendCode(Protocol::ANS_GET_ART);
+	mh->sendCode(Protocol::ANS_NAK);
 	mh->sendCode(Protocol::ANS_END);
 }
 
@@ -117,12 +187,12 @@ int main(int argc, char* argv[])
 				switch (p) {
 					case Protocol::COM_LIST_NG:    list_news_groups(&mh); break;
 					case Protocol::COM_CREATE_NG:  create_news_group(&mh); break;
-					case Protocol::COM_DELETE_NG:  ; break; // delete newsgroup
-					case Protocol::COM_LIST_ART:   ; break; // list articles
-					case Protocol::COM_CREATE_ART: ; break; // create article
-					case Protocol::COM_DELETE_ART: ; break; // delete article
-					case Protocol::COM_GET_ART:    ; break; // get article
-					default: break;
+					case Protocol::COM_DELETE_NG:  delete_news_group(&mh); break; // delete newsgroup
+					case Protocol::COM_LIST_ART:   list_articles(&mh); break; // list articles
+					case Protocol::COM_CREATE_ART: create_article(&mh); break; // create article
+					case Protocol::COM_DELETE_ART: delete_article(&mh); break; // delete article
+					case Protocol::COM_GET_ART:    get_article(&mh); break; // get article
+					default: protocolViolation("unexpected code");
 				}
 				
 				
