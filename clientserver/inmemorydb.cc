@@ -1,4 +1,5 @@
 #include <algorithm> // std::find
+#include <iostream>
 
 #include "inmemorydb.h"
 
@@ -45,13 +46,9 @@ bool InMemoryDB::delete_news_group(id_t)
 
 std::vector<std::pair<const id_t, string>> InMemoryDB::list_articles(id_t id_nbr)
 {
-	NewsGroup* ng = findNewsGroup(id_nbr);
+	NewsGroup ng = newsGroups.at(id_nbr);
 	std::vector<std::pair<const id_t, string>> list;
-	if (ng == nullptr)
-	{
-		return list;
-	}
-	for (auto kv : ng->articles)
+	for (auto kv : ng.articles)
 	{
 		list.emplace_back(kv.first, kv.second.title);
 	}
@@ -63,27 +60,34 @@ regarding how articles are saved.
 
 
 */
-bool InMemoryDB::create_article(id_t, string, string, string)
+void InMemoryDB::create_article(id_t, string, string, string)
 {
-	return false;
 }
 
-StatusCode InMemoryDB::delete_article(id_t, id_t)
+void InMemoryDB::delete_article(id_t, id_t)
 {
-	return StatusCode::NO_SUCH_NEWS_GROUP;
 }
 
-std::tuple<StatusCode, string, string, string> InMemoryDB::get_article(id_t ng_id, id_t art_id)
+std::tuple<string, string, string> InMemoryDB::get_article(id_t ng_id, id_t art_id)
 {
-	NewsGroup* ng = findNewsGroup(ng_id);
-	if (ng == nullptr)
+	try
 	{
-		return std::make_tuple(StatusCode::NO_SUCH_NEWS_GROUP, "no title", "no author", "no text");
+		NewsGroup ng = newsGroups.at(ng_id);
+		
+		try
+		{
+			Article a = ng.articles.at(art_id);
+			return std::make_tuple(a.title, a.author, a.text);
+		}
+		catch (const std::out_of_range& oor)
+		{
+			std::cerr << "No such article: " << oor.what() << "\n";
+			throw std::out_of_range("article");
+		}
 	}
-	const Article* a = ng->getArticle(art_id);
-	if (a == nullptr)
+	catch (const std::out_of_range& oor)
 	{
-		return std::make_tuple(StatusCode::NO_SUCH_ARTICLE, "no title", "no author", "no text");
+		std::cerr << "No such news group: " << oor.what() << "\n";
+		throw std::out_of_range("news group");
 	}
-	return std::make_tuple(StatusCode::OK, a->title, a->author, a->text);
 }
