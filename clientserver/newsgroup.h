@@ -2,6 +2,7 @@
 #define NEWS_GROUP_H
 
 #include <string>
+#include <vector>
 #include "article.h"
 
 using std::string;
@@ -13,11 +14,12 @@ public:
 	NewsGroup(string, id_t);
 	// Creates an article and adds it to this newsgroup
 	bool addArticle(string, string, string);
-	Article* getArticle(id_t) const;
+	const Article* getArticle(id_t) const;
 	// Removes an article from this newsgroup
 	bool removeArticle(id_t);
-	string name;
-	id_t id_nbr;
+	const id_t id_nbr;
+	const string name;
+	std::vector<Article> articles;
 private:
 	id_t next_article_nbr;
 };
