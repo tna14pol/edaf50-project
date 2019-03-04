@@ -2,7 +2,7 @@
 #define NEWS_GROUP_H
 
 #include <string>
-#include <vector>
+#include <unordered_map>
 #include "article.h"
 
 using std::string;
@@ -19,7 +19,8 @@ public:
 	bool removeArticle(id_t);
 	const id_t id_nbr;
 	const string name;
-	std::vector<Article> articles;
+	std::unordered_map<id_t, const Article> articles;
+//	std::vector<Article> articles;
 private:
 	id_t next_article_nbr;
 };

@@ -4,7 +4,7 @@
 NewsGroup::NewsGroup(string name, id_t id_nbr)
 : id_nbr(id_nbr), name(name), next_article_nbr(0)
 {
-	articles = std::vector<Article>();
+	articles = std::unordered_map<id_t, const Article>();
 }
 
 bool NewsGroup::addArticle(string, string, string)
@@ -14,12 +14,7 @@ bool NewsGroup::addArticle(string, string, string)
 
 const Article* NewsGroup::getArticle(id_t id) const
 {
-	auto p = std::find_if(articles.begin(), articles.end(),
-		[&] (Article art)
-		{
-			return art.id_nbr == id;
-		});
-	return (p != articles.end()) ? nullptr : &*p;
+	return &(articles.at(id));
 }
 
 bool NewsGroup::removeArticle(id_t)
