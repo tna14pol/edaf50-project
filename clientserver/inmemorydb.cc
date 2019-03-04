@@ -49,14 +49,10 @@ std::vector<std::pair<const id_t, string>> InMemoryDB::list_articles(id_t id_nbr
 	}
 	return list;
 }
-/*
-Changed InMemoryDB to match change of implementation in NewsGroup
-regarding how articles are saved.
 
-
-*/
-void InMemoryDB::create_article(id_t, string, string, string)
+void InMemoryDB::create_article(id_t id_nbr, string title, string author, string text)
 {
+	newsGroups.at(id_nbr).addArticle(title, author, text);
 }
 
 void InMemoryDB::delete_article(id_t ng_id, id_t art_id)
