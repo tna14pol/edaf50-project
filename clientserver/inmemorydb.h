@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <tuple>
 #include <utility> // std::pair
 
 #include "databaseinterface.h"
@@ -17,12 +18,13 @@ public:
 //	InMemoryDB();
 	std::vector<std::pair<id_t,string>> list_news_groups();
 	bool create_news_group(string);
-	void delete_news_group(id_t);
-	void list_articles(id_t);
-	void create_article(id_t, string, string, string);
-	void delete_article(id_t, id_t);
-	void get_article(id_t, id_t);
+	bool delete_news_group(id_t);
+	std::vector<std::pair<id_t, string>> list_articles(id_t);
+	bool create_article(id_t, string, string, string);
+	StatusCode delete_article(id_t, id_t);
+	std::tuple<StatusCode, string, string, string> get_article(id_t, id_t);
 private:
+	NewsGroup* findNewsGroup(id_t);
 	std::vector<NewsGroup> newsGroups;
 	id_t next_id;
 };

@@ -4,13 +4,18 @@
 
 using std::string;
 using id_t = unsigned int; // Alias to use for identification numbers
-/*
-InMemoryDB::InMemoryDB()
+
+
+NewsGroup* InMemoryDB::findNewsGroup(id_t id_nbr)
 {
-	next_id = 0;
-	newsGroups = vector();
+	auto p = std::find_if(newsGroups.begin(), newsGroups.end(),
+		[&] (NewsGroup ng)
+		{
+			return ng.id_nbr == id_nbr;
+		});
+	return (p != newsGroups.end()) ? nullptr : &*p;
 }
-*/
+
 std::vector<std::pair<id_t,string>> InMemoryDB::list_news_groups()
 {
 	std::vector<std::pair<id_t, string>> list;
@@ -37,27 +42,47 @@ bool InMemoryDB::create_news_group(string name)
 	return true;
 }
 
-void InMemoryDB::delete_news_group(id_t)
+bool InMemoryDB::delete_news_group(id_t)
 {
-
+	return false;
 }
 
-void InMemoryDB::list_articles(id_t)
+std::vector<std::pair<id_t, string>> InMemoryDB::list_articles(id_t id_nbr)
 {
-
+	NewsGroup* ng = findNewsGroup(id_nbr);
+	std::vector<std::pair<id_t, string>> list;
+	if (ng == nullptr)
+	{
+		return list;
+	}
+	for (Article a : ng->articles)
+	{
+		list.emplace_back(a.id_nbr, a.title);
+	}
+	return list;
 }
 
-void InMemoryDB::create_article(id_t, string, string, string)
+bool InMemoryDB::create_article(id_t, string, string, string)
 {
-
+	return false;
 }
 
-void InMemoryDB::delete_article(id_t, id_t)
+StatusCode InMemoryDB::delete_article(id_t, id_t)
 {
-
+	return StatusCode::NO_SUCH_NEWS_GROUP;
 }
 
-void InMemoryDB::get_article(id_t, id_t)
+std::tuple<StatusCode, string, string, string> InMemoryDB::get_article(id_t ng_id, id_t art_id)
 {
-
+	NewsGroup* ng = findNewsGroup(ng_id);
+	if (ng == nullptr)
+	{
+		return std::make_tuple(StatusCode::NO_SUCH_NEWS_GROUP, "no title", "no author", "no text");
+	}
+	const Article* a = ng->getArticle(art_id);
+	if (a == nullptr)
+	{
+		return std::make_tuple(StatusCode::NO_SUCH_ARTICLE, "no title", "no author", "no text");
+	}
+	return std::make_tuple(StatusCode::OK, a->title, a->author, a->text);
 }
