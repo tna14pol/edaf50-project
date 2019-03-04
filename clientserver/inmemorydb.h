@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <unordered_map>
 #include <tuple>
 #include <utility> // std::pair
 
@@ -15,7 +16,7 @@ using id_t = unsigned int; // Alias to use for identification numbers
 
 class InMemoryDB :public DatabaseInterface {
 public:
-	std::vector<std::pair<id_t,string>> list_news_groups() override;
+	std::vector<std::pair<const id_t,string>> list_news_groups() override;
 	bool create_news_group(string) override;
 	bool delete_news_group(id_t) override;
 	std::vector<std::pair<const id_t, string>> list_articles(id_t) override;
@@ -24,7 +25,7 @@ public:
 	std::tuple<StatusCode, string, string, string> get_article(id_t, id_t) override;
 private:
 	NewsGroup* findNewsGroup(id_t);
-	std::vector<NewsGroup> newsGroups;
+	std::unordered_map<id_t, NewsGroup> newsGroups;
 	id_t next_id;
 };
 

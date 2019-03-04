@@ -30,7 +30,7 @@ public:
 	 * Returns a vector containing pairs of the
 	 * identification numbers and titles of the groups
 	 */
-	virtual std::vector<std::pair<id_t, string>> list_news_groups() = 0;
+	virtual std::vector<std::pair<const id_t, string>> list_news_groups() = 0;
 	
 	/*
 	 * Create a newsgroup

@@ -6,39 +6,35 @@ using std::string;
 using id_t = unsigned int; // Alias to use for identification numbers
 
 
-NewsGroup* InMemoryDB::findNewsGroup(id_t id_nbr)
+NewsGroup* InMemoryDB::findNewsGroup(id_t id)
 {
-	auto p = std::find_if(newsGroups.begin(), newsGroups.end(),
-		[&] (NewsGroup ng)
-		{
-			return ng.id_nbr == id_nbr;
-		});
-	return (p != newsGroups.end()) ? nullptr : &*p;
+	return &(newsGroups.at(id));
 }
 
-std::vector<std::pair<id_t,string>> InMemoryDB::list_news_groups()
+std::vector<std::pair<const id_t,string>> InMemoryDB::list_news_groups()
 {
-	std::vector<std::pair<id_t, string>> list;
-	for (NewsGroup ng : newsGroups)
+	std::vector<std::pair<const id_t, string>> list;
+	for (auto kv : newsGroups)
 	{
-		list.emplace_back(ng.id_nbr, ng.name);
+		list.emplace_back(kv.first, kv.second.name);
 	}
 	return list;
 }
 
 bool InMemoryDB::create_news_group(string name)
 {
-	auto result = std::find_if(newsGroups.begin(), newsGroups.end(),
-		[&] (NewsGroup ng)
-		{
-			return ng.name == name;
-		});
-	if (result != newsGroups.end())
+	//Have to find by name instead of id_nbr
+	auto kv = newsGroups.begin();
+	while (kv != newsGroups.end() && kv->second.name == name)
+	{
+		kv++;
+	}
+	if (kv != newsGroups.end())
 	{
 		return false;
 	}
 	next_id++;
-	newsGroups.emplace_back(name, next_id);
+	newsGroups.emplace(next_id, NewsGroup(name, next_id));
 	return true;
 }
 
