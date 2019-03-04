@@ -21,7 +21,7 @@ bool InMemoryDB::create_news_group(string name)
 {
 	//Have to find by name instead of id_nbr
 	auto kv = newsGroups.begin();
-	while (kv != newsGroups.end() && kv->second.name == name)
+	while (kv != newsGroups.end() && kv->second.name != name)
 	{
 		kv++;
 	}
