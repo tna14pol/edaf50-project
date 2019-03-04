@@ -21,8 +21,9 @@ LDFLAGS =   -g
 #LDFLAGS +=  -stdlib=libc++
 
 # Targets
+PROGS = in_memory_server
 
-all: libclientserver.a
+all: libclientserver.a $(PROGS)
 	make -C test
 
 # Create the library; ranlib is for Darwin (OS X) and maybe other systems.
@@ -31,6 +32,8 @@ all: libclientserver.a
 libclientserver.a: connection.o server.o messagehandler.o
 	ar rv libclientserver.a  connection.o server.o messagehandler.o
 	ranlib libclientserver.a
+
+in_memory_server: in_memory_server.o libclientserver.a
 
 # Phony targets
 .PHONY: all clean distclean
