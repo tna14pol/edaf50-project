@@ -87,8 +87,9 @@ void InMemoryDB::delete_article(id_t ng_id, id_t art_id)
 	}
 }
 
-std::tuple<string, string, string> InMemoryDB::get_article(id_t ng_id, id_t art_id)
+std::vector<string> InMemoryDB::get_article(id_t ng_id, id_t art_id)
 {
+
 	try
 	{
 		NewsGroup ng = newsGroups.at(ng_id);
@@ -96,7 +97,12 @@ std::tuple<string, string, string> InMemoryDB::get_article(id_t ng_id, id_t art_
 		try
 		{
 			Article a = ng.articles.at(art_id);
-			return std::make_tuple(a.title, a.author, a.text);
+//			return std::make_tuple(a.title, a.author, a.text);
+			std::vector<string> list;
+			list.push_back(a.title);
+			list.push_back(a.author);
+			list.push_back(a.text);
+			return list;
 		}
 		catch (const std::out_of_range& oor)
 		{
@@ -107,4 +113,5 @@ std::tuple<string, string, string> InMemoryDB::get_article(id_t ng_id, id_t art_
 	{
 		throw NoSuchNewsGroupException();
 	}
+	
 }

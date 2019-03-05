@@ -218,9 +218,9 @@ void get_article(MessageHandler* mh)
 	try {
 		auto t = db.get_article(ng_id, a_id);
 		mh->sendCode(Protocol::ANS_ACK);
-		mh->sendStringParameter(std::get<0>(t));
-		mh->sendStringParameter(std::get<1>(t));
-		mh->sendStringParameter(std::get<2>(t));
+		mh->sendStringParameter(t.at(0));
+		mh->sendStringParameter(t.at(1));
+		mh->sendStringParameter(t.at(2));
 		
 	}
 	catch (NoSuchNewsGroupException&)

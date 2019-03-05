@@ -7,7 +7,6 @@
 
 #include <string>
 #include <vector>
-#include <tuple>
 #include <utility> // std::pair
 
 #include "nosuchnewsgroupexception.h"
@@ -82,7 +81,8 @@ public:
 	/*
 	 * Get an article
 	 * 
-	 * Returns a tuple containing the title, author, and text of the article.
+	 * Returns a vector<string> containing the title, author, and text
+	 * of the article.
 	 * 
 	 * If the specified news group does not exist,
 	 * throws a NoSuchNewsGroupException.
@@ -90,7 +90,7 @@ public:
 	 * If the news group exists but not the article,
 	 * throws a NoSuchArticleException.
 	 */
-	virtual std::tuple<string, string, string> get_article(id_t, id_t) = 0;
+	virtual std::vector<string> get_article(id_t, id_t) = 0;
 
 };
 

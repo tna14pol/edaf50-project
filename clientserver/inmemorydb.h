@@ -15,7 +15,7 @@ public:
 	std::vector<std::pair<id_t, string>> list_articles(id_t) override;
 	void create_article(id_t, string, string, string) override;
 	void delete_article(id_t, id_t) override;
-	std::tuple<string, string, string> get_article(id_t, id_t) override;
+	std::vector<string> get_article(id_t, id_t) override;
 private:
 	std::unordered_map<id_t, NewsGroup> newsGroups;
 	// next_id is used to assign identification numbers to new news groups
