@@ -1,0 +1,55 @@
+1. TODO
+	1. Document and maybe refactor the code in inmemorydb.cc, inmemorydb.h
+		and in_memory_server.cc.
+	2. Look over naming conventions
+	3. Look over DatabaseInterface to ensure that it is truly independent of
+		the messaging protocol
+	4. Implement client
+	5. Implement disk server
+
+2. Struktur
+
+edaf50-project/
+	I den här mappen ligger den här README-filen, projektbeskrivningen (cppproject.pdf)
+	samt två testprogram(TestServer1.jar och TestServer2.jar).
+
+edaf50-project/clientserver
+	Här ligger all "riktig" kod.
+	
+	Kod som vi har skrivit:
+		article.cc, article.h
+		databaseinterface.h
+		inmemorydb.cc, inmemorydb.h
+		in_memory_server.cc
+		messagehandler.cc,messagehandler.h
+		newsgroup.cc, newsgroup.h
+	
+	Given kod:
+		connection.cc, conection.h
+		connectionclosedexception.h
+		protocol.h
+		server.cc, server.h
+	
+
+edaf50-project/clientserver/test
+	Här ligger lite given exempelkod, samt två program som testar funktionaliteten
+	i MessageHandler.
+	
+	Kod som vi har skrivit:
+		test_mh_client.cc
+		test_mh_server.cc
+	
+	Given kod:
+		myclient.cc
+		myserver.cc
+
+3. Status
+
+in_memory_server.cc ser ut att vara klar, iallafall enligt TestServer2.jar.
+
+Testa så här:
+
+	Ifrån edaf50-project/m kör de följande kommandona i var sin terminal
+		clientserver/in_memory_server 1234
+		
+		java -jar TestServer2.jar localhost 1234
