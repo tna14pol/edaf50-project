@@ -143,7 +143,7 @@ void list_articles(MessageHandler* mh)
 			mh->sendStringParameter(a.second);
 		}
 	}
-	catch (const std::out_of_range&)
+	catch (NoSuchNewsGroupException&)
 	{
 		mh->sendCode(Protocol::ANS_NAK);
 		mh->sendCode(Protocol::ERR_NG_DOES_NOT_EXIST);
@@ -168,7 +168,7 @@ void create_article(MessageHandler* mh)
 		db.create_article(id_nbr, title, author, text);
 		mh->sendCode(Protocol::ANS_ACK);
 	}
-	catch (const std::out_of_range&)
+	catch (NoSuchNewsGroupException&)
 	{
 		mh->sendCode(Protocol::ANS_NAK);
 		mh->sendCode(Protocol::ERR_NG_DOES_NOT_EXIST);
@@ -191,28 +191,15 @@ void delete_article(MessageHandler* mh)
 		db.delete_article(ng_id, a_id);
 		mh->sendCode(Protocol::ANS_ACK);
 	}
-	catch (const std::out_of_range& oor)
+	catch (NoSuchNewsGroupException&)
 	{
-	
-		std::cout << "Error: " << oor.what() << std::endl;
 		mh->sendCode(Protocol::ANS_NAK);
-		std::string news_group = "news group";
-		std::string article = "article";
-		
-//		if (news_group.compare(oor.what()) == 0)
-		if (strcmp(oor.what(), "news group") == 0)
-		{
-			mh->sendCode(Protocol::ERR_NG_DOES_NOT_EXIST);
-		}
-//		else if (article.compare(oor.what()) == 0)
-		else if (strcmp(oor.what(), "article") == 0)
-		{
-			mh->sendCode(Protocol::ERR_ART_DOES_NOT_EXIST);
-		}
-		else
-		{
-			throw oor;
-		}
+		mh->sendCode(Protocol::ERR_NG_DOES_NOT_EXIST);
+	}
+	catch (NoSuchArticleException&)
+	{
+		mh->sendCode(Protocol::ANS_NAK);
+		mh->sendCode(Protocol::ERR_ART_DOES_NOT_EXIST);
 	}
 	mh->sendCode(Protocol::ANS_END);
 }
@@ -236,25 +223,15 @@ void get_article(MessageHandler* mh)
 		mh->sendStringParameter(std::get<2>(t));
 		
 	}
-	catch (const std::out_of_range& oor)
+	catch (NoSuchNewsGroupException&)
 	{
-		std::cout << "Error: " << oor.what() << std::endl;
 		mh->sendCode(Protocol::ANS_NAK);
-		
-		std::string news_group = "news group";
-		std::string article = "article";
-		if (news_group.compare(oor.what()) == 0)
-		{
-			mh->sendCode(Protocol::ERR_NG_DOES_NOT_EXIST);
-		}
-		else if (article.compare(oor.what()) == 0)
-		{
-			mh->sendCode(Protocol::ERR_ART_DOES_NOT_EXIST);
-		}
-		else
-		{
-			throw oor;
-		}
+		mh->sendCode(Protocol::ERR_NG_DOES_NOT_EXIST);
+	}
+	catch (NoSuchArticleException&)
+	{
+		mh->sendCode(Protocol::ANS_NAK);
+		mh->sendCode(Protocol::ERR_ART_DOES_NOT_EXIST);
 	}
 	mh->sendCode(Protocol::ANS_END);
 }

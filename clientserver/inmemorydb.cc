@@ -38,20 +38,33 @@ bool InMemoryDB::delete_news_group(id_t id_nbr)
 
 std::vector<std::pair<id_t, string>> InMemoryDB::list_articles(id_t id_nbr)
 {
-	NewsGroup ng = newsGroups.at(id_nbr);
 	std::vector<std::pair<id_t, string>> list;
-	for (auto kv : ng.articles)
+	try
 	{
-		list.emplace_back(kv.first, kv.second.title);
+		NewsGroup ng = newsGroups.at(id_nbr);
+		for (auto kv : ng.articles)
+		{
+			list.emplace_back(kv.first, kv.second.title);
+		}
 	}
-	
+	catch (const std::out_of_range& oor)
+	{
+		throw NoSuchNewsGroupException();
+	}
 	std::sort(list.begin(), list.end());
 	return list;
 }
 
 void InMemoryDB::create_article(id_t id_nbr, string title, string author, string text)
 {
-	newsGroups.at(id_nbr).addArticle(title, author, text);
+	try
+	{
+		newsGroups.at(id_nbr).addArticle(title, author, text);
+	}
+	catch (const std::out_of_range& oor)
+	{
+		throw NoSuchNewsGroupException();
+	}
 }
 
 void InMemoryDB::delete_article(id_t ng_id, id_t art_id)
@@ -75,12 +88,12 @@ void InMemoryDB::delete_article(id_t ng_id, id_t art_id)
 	catch (const std::out_of_range& oor)
 	{
 		string msg = "news group";
-		throw std::out_of_range(msg);
+		throw NoSuchNewsGroupException();
 	}
 	if (result == 0)
 	{
 		string msg = "article";
-		throw std::out_of_range(msg);
+		throw NoSuchArticleException();
 	}
 /*	
 	if (newsGroups.count(ng_id) == 0) {
@@ -91,7 +104,6 @@ void InMemoryDB::delete_article(id_t ng_id, id_t art_id)
 
 std::tuple<string, string, string> InMemoryDB::get_article(id_t ng_id, id_t art_id)
 {
-	int result{1};
 	try
 	{
 		NewsGroup ng = newsGroups.at(ng_id);
@@ -103,17 +115,11 @@ std::tuple<string, string, string> InMemoryDB::get_article(id_t ng_id, id_t art_
 		}
 		catch (const std::out_of_range& oor)
 		{
-			result = 0;
-			throw std::out_of_range("article");
+			throw NoSuchArticleException();
 		}
 	}
 	catch (const std::out_of_range& oor)
 	{
-		string msg = "news group";
-		if (result == 0)
-		{
-			msg = "article";
-		}
-		throw std::out_of_range(msg);
+		throw NoSuchNewsGroupException();
 	}
 }
