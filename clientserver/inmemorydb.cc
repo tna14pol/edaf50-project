@@ -57,49 +57,34 @@ std::vector<std::pair<id_t, string>> InMemoryDB::list_articles(id_t id_nbr)
 
 void InMemoryDB::create_article(id_t id_nbr, string title, string author, string text)
 {
-	try
-	{
-		newsGroups.at(id_nbr).addArticle(title, author, text);
-	}
-	catch (const std::out_of_range& oor)
+	// Check that news group exists
+	if (newsGroups.count(id_nbr) == 0)
 	{
 		throw NoSuchNewsGroupException();
 	}
+	// Add article
+	newsGroups.at(id_nbr).addArticle(title, author, text);
 }
 
 void InMemoryDB::delete_article(id_t ng_id, id_t art_id)
 {
-	int result{1};
-	try
+	// Check that news group exists
+	if (newsGroups.count(ng_id) == 0)
 	{
-		/*
-		 * Try to erase article
-		 * 
-		 * If news group does not exist, an exception will be thrown and
-		 * caught. A new exception with the message "news group" will then
-		 * be thrown.
-		 * 
-		 * If the article does not exist, result will be set to 0,
-		 * in which case an exception with the message "article" will
-		 * later be thrown.
-		 */
-		result = newsGroups.at(ng_id).articles.erase(art_id);
-	}
-	catch (const std::out_of_range& oor)
-	{
-		string msg = "news group";
 		throw NoSuchNewsGroupException();
 	}
-	if (result == 0)
+	// Check that article exists
+	if (newsGroups.at(ng_id).articles.count(art_id) == 0)
 	{
-		string msg = "article";
 		throw NoSuchArticleException();
 	}
-/*	
-	if (newsGroups.count(ng_id) == 0) {
-		throw 
+	// Erase article
+	auto result = newsGroups.at(ng_id).articles.erase(art_id);
+	// Check that operation succeeded
+	if (result == 0)
+	{
+		throw std::runtime_error("Unable to delete article");
 	}
-	*/
 }
 
 std::tuple<string, string, string> InMemoryDB::get_article(id_t ng_id, id_t art_id)
