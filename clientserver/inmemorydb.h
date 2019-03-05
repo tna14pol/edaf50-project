@@ -1,18 +1,11 @@
 #ifndef IN_MEMORY_DB_H
 #define IN_MEMORY_DB_H
 
-#include <string>
-#include <vector>
 #include <unordered_map>
-#include <tuple>
-#include <utility> // std::pair
 
 #include "databaseinterface.h"
 #include "newsgroup.h"
 #include "article.h"
-
-using std::string;
-using id_t = unsigned int; // Alias to use for identification numbers
 
 class InMemoryDB :public DatabaseInterface {
 public:

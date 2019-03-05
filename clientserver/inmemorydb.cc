@@ -1,11 +1,6 @@
 #include <algorithm> // std::sort
-#include <iostream>
 
 #include "inmemorydb.h"
-
-using std::string;
-using id_t = unsigned int; // Alias to use for identification numbers
-
 
 std::vector<std::pair<id_t,string>> InMemoryDB::list_news_groups()
 {
@@ -70,7 +65,6 @@ void InMemoryDB::delete_article(id_t ng_id, id_t art_id)
 	}
 	catch (const std::out_of_range& oor)
 	{
-		std::cerr << "No such news group: " << oor.what() << "\n";
 		throw std::out_of_range("news group");
 	}
 }
@@ -88,13 +82,11 @@ std::tuple<string, string, string> InMemoryDB::get_article(id_t ng_id, id_t art_
 		}
 		catch (const std::out_of_range& oor)
 		{
-			std::cerr << "No such article: " << oor.what() << "\n";
 			throw std::out_of_range("article");
 		}
 	}
 	catch (const std::out_of_range& oor)
 	{
-		std::cerr << "No such news group: " << oor.what() << "\n";
 		throw std::out_of_range("news group");
 	}
 }
