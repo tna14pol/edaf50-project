@@ -221,7 +221,6 @@ void get_article(MessageHandler* mh)
 		mh->sendStringParameter(t.at(0));
 		mh->sendStringParameter(t.at(1));
 		mh->sendStringParameter(t.at(2));
-		
 	}
 	catch (NoSuchNewsGroupException&)
 	{

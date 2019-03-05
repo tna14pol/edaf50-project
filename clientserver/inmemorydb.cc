@@ -89,29 +89,21 @@ void InMemoryDB::delete_article(id_t ng_id, id_t art_id)
 
 std::vector<string> InMemoryDB::get_article(id_t ng_id, id_t art_id)
 {
-
-	try
-	{
-		NewsGroup ng = newsGroups.at(ng_id);
-		
-		try
-		{
-			Article a = ng.articles.at(art_id);
-//			return std::make_tuple(a.title, a.author, a.text);
-			std::vector<string> list;
-			list.push_back(a.title);
-			list.push_back(a.author);
-			list.push_back(a.text);
-			return list;
-		}
-		catch (const std::out_of_range& oor)
-		{
-			throw NoSuchArticleException();
-		}
-	}
-	catch (const std::out_of_range& oor)
+	// Check that news group exists
+	if (newsGroups.count(ng_id) == 0)
 	{
 		throw NoSuchNewsGroupException();
 	}
-	
+	// Check that article exists
+	if (newsGroups.at(ng_id).articles.count(art_id) == 0)
+	{
+		throw NoSuchArticleException();
+	}
+	// Get article
+	Article a = newsGroups.at(ng_id).articles.at(art_id);
+	std::vector<string> list;
+	list.push_back(a.title);
+	list.push_back(a.author);
+	list.push_back(a.text);
+	return list;
 }
