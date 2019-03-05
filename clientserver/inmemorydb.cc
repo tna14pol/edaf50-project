@@ -56,21 +56,42 @@ void InMemoryDB::create_article(id_t id_nbr, string title, string author, string
 
 void InMemoryDB::delete_article(id_t ng_id, id_t art_id)
 {
+	int result{1};
 	try
 	{
-		if (newsGroups.at(ng_id).articles.erase(art_id) == 0)
-		{
-			throw std::out_of_range("article");
-		}
+		/*
+		 * Try to erase article
+		 * 
+		 * If news group does not exist, an exception will be thrown and
+		 * caught. A new exception with the message "news group" will then
+		 * be thrown.
+		 * 
+		 * If the article does not exist, result will be set to 0,
+		 * in which case an exception with the message "article" will
+		 * later be thrown.
+		 */
+		result = newsGroups.at(ng_id).articles.erase(art_id);
 	}
 	catch (const std::out_of_range& oor)
 	{
-		throw std::out_of_range("news group");
+		string msg = "news group";
+		throw std::out_of_range(msg);
 	}
+	if (result == 0)
+	{
+		string msg = "article";
+		throw std::out_of_range(msg);
+	}
+/*	
+	if (newsGroups.count(ng_id) == 0) {
+		throw 
+	}
+	*/
 }
 
 std::tuple<string, string, string> InMemoryDB::get_article(id_t ng_id, id_t art_id)
 {
+	int result{1};
 	try
 	{
 		NewsGroup ng = newsGroups.at(ng_id);
@@ -82,11 +103,17 @@ std::tuple<string, string, string> InMemoryDB::get_article(id_t ng_id, id_t art_
 		}
 		catch (const std::out_of_range& oor)
 		{
+			result = 0;
 			throw std::out_of_range("article");
 		}
 	}
 	catch (const std::out_of_range& oor)
 	{
-		throw std::out_of_range("news group");
+		string msg = "news group";
+		if (result == 0)
+		{
+			msg = "article";
+		}
+		throw std::out_of_range(msg);
 	}
 }

@@ -14,6 +14,7 @@
 #include <string>
 #include <algorithm>
 
+#include <string.h>
 
 InMemoryDB db = InMemoryDB();
 
@@ -145,7 +146,7 @@ void list_articles(MessageHandler* mh)
 	catch (const std::out_of_range&)
 	{
 		mh->sendCode(Protocol::ANS_NAK);
-		mh->sendCode(Protocol::ERR_NG_ALREADY_EXISTS);
+		mh->sendCode(Protocol::ERR_NG_DOES_NOT_EXIST);
 	}
 	mh->sendCode(Protocol::ANS_END);
 }
@@ -192,14 +193,19 @@ void delete_article(MessageHandler* mh)
 	}
 	catch (const std::out_of_range& oor)
 	{
+	
+		std::cout << "Error: " << oor.what() << std::endl;
 		mh->sendCode(Protocol::ANS_NAK);
 		std::string news_group = "news group";
 		std::string article = "article";
-		if (news_group.compare(oor.what()))
+		
+//		if (news_group.compare(oor.what()) == 0)
+		if (strcmp(oor.what(), "news group") == 0)
 		{
 			mh->sendCode(Protocol::ERR_NG_DOES_NOT_EXIST);
 		}
-		else if (article.compare(oor.what()))
+//		else if (article.compare(oor.what()) == 0)
+		else if (strcmp(oor.what(), "article") == 0)
 		{
 			mh->sendCode(Protocol::ERR_ART_DOES_NOT_EXIST);
 		}
@@ -232,14 +238,16 @@ void get_article(MessageHandler* mh)
 	}
 	catch (const std::out_of_range& oor)
 	{
+		std::cout << "Error: " << oor.what() << std::endl;
 		mh->sendCode(Protocol::ANS_NAK);
+		
 		std::string news_group = "news group";
 		std::string article = "article";
-		if (news_group.compare(oor.what()))
+		if (news_group.compare(oor.what()) == 0)
 		{
 			mh->sendCode(Protocol::ERR_NG_DOES_NOT_EXIST);
 		}
-		else if (article.compare(oor.what()))
+		else if (article.compare(oor.what()) == 0)
 		{
 			mh->sendCode(Protocol::ERR_ART_DOES_NOT_EXIST);
 		}
