@@ -14,13 +14,17 @@ public:
 	NewsGroup(string, id_t);
 	/* 
 	 * Creates an article and adds it to this newsgroup
+	 * The articles gets the its identification number
+	 * from member variable next_article_nbr,
+	 * which is incremented before being used in
+	 * this function.
 	 */
 	void addArticle(string, string, string);
 	const id_t id_nbr;
 	const string name;
 	std::unordered_map<id_t, const Article> articles;
-//	std::vector<Article> articles;
 private:
+	// Used to assign identification numbers to new articles
 	id_t next_article_nbr;
 };
 #endif

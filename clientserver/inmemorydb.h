@@ -25,6 +25,7 @@ public:
 	std::tuple<string, string, string> get_article(id_t, id_t) override;
 private:
 	std::unordered_map<id_t, NewsGroup> newsGroups;
+	// next_id is used to assign identification numbers to new news groups
 	id_t next_id;
 };
 
