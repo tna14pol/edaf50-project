@@ -1,5 +1,5 @@
 /*
- * Interface NameServerInterface -- all name server implementations must
+ * Interface DatabaseInterface -- all database implementations must
  * implement this interface.
  */
 #ifndef DATABSE_INTERFACE_H
