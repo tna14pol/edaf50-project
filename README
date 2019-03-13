@@ -1,9 +1,13 @@
 1. TODO
-	1. Document and maybe refactor the code in inmemorydb.cc, inmemorydb.h
-		and in_memory_server.cc.
+	1. Is there a need for additional documentation of inmemorydb.cc, inmemorydb.h
+		and in_memory_server.cc?
 	2. Look over naming conventions
+			CamelCase is currently used for classes and structs.
+			snake_case or camelCase for functions?
 	3. Look over DatabaseInterface to ensure that it is truly independent of
 		the messaging protocol
+			Possible problem: the interface is too close to the messaging protocol, especially
+			the list_newsgroups and list_articles functions; namely how the lists are sorted.
 	4. Implement client
 	5. Implement disk server
 

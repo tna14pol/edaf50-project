@@ -22,10 +22,11 @@ bool InMemoryDB::create_news_group(string name)
 	{
 		kv++;
 	}
-	if (kv != newsGroups.end())
+	if (kv != newsGroups.end()) // If news group already existed, return false
 	{
 		return false;
 	}
+	// Create news group and return true
 	next_id++;
 	newsGroups.emplace(next_id, NewsGroup(name, next_id));
 	return true;
@@ -39,7 +40,7 @@ bool InMemoryDB::delete_news_group(id_t id_nbr)
 std::vector<std::pair<id_t, string>> InMemoryDB::list_articles(id_t id_nbr)
 {
 	std::vector<std::pair<id_t, string>> list;
-	try
+	try // try to get news group and collect all its articles
 	{
 		NewsGroup ng = newsGroups.at(id_nbr);
 		for (auto kv : ng.articles)
