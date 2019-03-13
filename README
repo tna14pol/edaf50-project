@@ -28,12 +28,14 @@ edaf50-project/clientserver
 		newsgroup.cc,
 		newsgroup.h,
 		nosucharticleexception.h,
-		nosuchnewsgroupexception.h
+		nosuchnewsgroupexception.h,
+		serverhelpfunctions.cc,
+		serverhelpfunctions.h
 	
 	Given kod:
 		connection.cc,
+		connection.h,
 		connectionclosedexception.h,
-		conection.h,
 		protocol.h,
 		server.cc,
 		server.h
