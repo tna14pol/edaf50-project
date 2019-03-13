@@ -1,6 +1,6 @@
 1. TODO
 	1. Is there a need for additional documentation of inmemorydb.cc, inmemorydb.h
-		and in_memory_server.cc?
+		and inmemoryserver.cc?
 	2. Look over naming conventions
 			CamelCase is currently used for classes and structs.
 			snake_case or camelCase for functions?
@@ -26,7 +26,7 @@ edaf50-project/clientserver
 		databaseinterface.h,
 		inmemorydb.cc,
 		inmemorydb.h,
-		in_memory_server.cc,
+		inmemoryserver.cc,
 		messagehandler.cc,
 		messagehandler.h,
 		newsgroup.cc,
@@ -58,12 +58,12 @@ edaf50-project/clientserver/test
 
 3. Status
 
-in_memory_server.cc ser ut att vara klar, iallafall enligt TestServer2.jar.
+inmemoryserver.cc ser ut att vara klar, iallafall enligt TestServer2.jar.
 
 Testa så här:
 
 	Ifrån /edaf50-project/ kör de följande kommandona i var sin terminal:
 	
-		clientserver/in_memory_server 1234
+		clientserver/inmemoryserver 1234
 		
 		java -jar TestServer2.jar localhost 1234

@@ -21,7 +21,7 @@ LDFLAGS =   -g
 #LDFLAGS +=  -stdlib=libc++
 
 # Targets
-PROGS = in_memory_server
+PROGS = inmemoryserver
 
 all: libclientserver.a $(PROGS)
 	make -C test
@@ -33,7 +33,7 @@ libclientserver.a: connection.o server.o messagehandler.o inmemorydb.o newsgroup
 	ar rv libclientserver.a  connection.o server.o messagehandler.o inmemorydb.o newsgroup.o article.o serverhelpfunctions.o
 	ranlib libclientserver.a
 
-in_memory_server: in_memory_server.o libclientserver.a
+inmemoryserver: inmemoryserver.o libclientserver.a
 
 # Phony targets
 .PHONY: all clean distclean

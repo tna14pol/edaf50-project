@@ -1,4 +1,4 @@
-/* in_memory_server.cc: Based on myserver.cc, but uses a MessageHandler object
+/* inmemoryserver.cc: Based on myserver.cc, but uses a MessageHandler object
  */
 #include "connection.h"
 #include "connectionclosedexception.h"
