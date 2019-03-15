@@ -56,6 +56,11 @@ edaf50-project/clientserver/test
 		myclient.cc
 		myserver.cc
 
+edaf50-project/clientserver/UML
+	Här ligger xml-filer som kan öppnas i draw.io.
+
+	database.xml beskriver DatabaseInterface, InMemoryDB, NewsGroup och Article
+	
 3. Status
 
 inmemoryserver.cc ser ut att vara klar, iallafall enligt TestServer2.jar.
